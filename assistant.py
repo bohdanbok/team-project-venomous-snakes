@@ -6,24 +6,28 @@ import pickle
 
 STOP_WORDS = ['exit', 'good bye', 'close']
 
+
 class Field:
     def __init__(self, value=None):
         self.value = value
     
     @property
     def value(self):
-        return self._value
+        return self._value\
+
 
     @value.setter
     def value(self, new_value):
         self._value = new_value
-        
+
     def __repr__(self):
         return f'{self.value}'
     
+
 class Name(Field):
     pass
             
+
 class Phone(Field):
     @Field.value.setter
     def value(self, new_value):
@@ -38,6 +42,7 @@ class Phone(Field):
             return True
         else:
             raise ValueError('Please write phone number in proper format')
+
 
 class Birthday(Field):
     @Field.value.setter
@@ -54,8 +59,9 @@ class Birthday(Field):
         else: 
             raise ValueError('Please write date of birth in format: dd-mm-yyyy')
     
+
 class Record:
-    def __init__(self, name, phone = None, birthday = None):
+    def __init__(self, name, phone=None, birthday=None):
         self.name = Name(name)
         if phone:
             self.phones = []
@@ -66,7 +72,7 @@ class Record:
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
         
-    def remove_phone(self,phone):
+    def remove_phone(self, phone):
         self.phones = [p for p in self.phones if p.value != phone]
         
     def edit_phone(self, old_phone, new_phone):
@@ -93,6 +99,7 @@ class Record:
         else:
             return f'Phones:{self.phones}, Birthday:{self.birthday}'
         
+
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
@@ -129,7 +136,9 @@ class AddressBook(UserDict):
 
         return matching_contacts
             
+
 contacts = AddressBook()
+
 
 def input_error(func):
     def inner(*args, **kwargs):
@@ -144,9 +153,11 @@ def input_error(func):
             print("Invalid input. Please try again.")    
     return inner
 
+
 def greet():
     result = 'How can I help you?'
     return result
+
 
 def new_contact(user_input):
     parts = user_input.split(" ")
@@ -160,11 +171,13 @@ def new_contact(user_input):
     result = 'Contact was successfully created'
     return result
 
+
 def add_phone(user_input):
     parts = user_input.split(" ")
     contacts[parts[1]].add_phone(parts[2])
     result = 'Extra phone was successfully added'
     return result
+
 
 def remove_contact(user_input):
     parts = user_input.split(" ")
@@ -172,23 +185,28 @@ def remove_contact(user_input):
     result = 'Phone was removed'
     return result
     
+
 def change_contact(user_input):
     parts = user_input.split(" ")
     contacts[parts[1]].edit_phone(parts[2], parts[3])
     result = 'Contact was successfully updated'
     return result 
 
+
 def show_contact(user_input):
     parts = user_input.split(" ")
     return contacts[parts[1]]
 
+
 def show_all():
     return contacts
 
+
 def days_to_birthday(user_input):
     parts = user_input.split(" ")
-    result =str(contacts[parts[1]].days_to_birthday())+ ' days till birthday'
+    result = str(contacts[parts[1]].days_to_birthday()) + ' days till birthday'
     return result
+
 
 def search_contacts(user_input):
     parts = user_input.split(" ")
@@ -205,6 +223,7 @@ def search_contacts(user_input):
 
     return result
         
+
 def process_input(user_input):
     listed_user_input = user_input.split(' ')
     command = listed_user_input[0].lower()
@@ -227,6 +246,7 @@ def process_input(user_input):
     elif command == 'search':
         return search_contacts(user_input)
         
+
 def run_bot():
     while True:
         user_input = input("Write your request: ")
@@ -237,6 +257,7 @@ def run_bot():
             contacts.save_data(filename)
             print('Good bye!')
             return sys.exit()
+
 
 def start():
     filename = input("Enter the filename to load the address book:")
