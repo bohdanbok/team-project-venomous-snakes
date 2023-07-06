@@ -15,7 +15,6 @@ class Field:
     def value(self):
         return self._value
 
-
     @value.setter
     def value(self, new_value):
         self._value = new_value
