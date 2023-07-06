@@ -13,7 +13,7 @@ class Field:
     
     @property
     def value(self):
-        return self._value\
+        return self._value
 
 
     @value.setter
