@@ -177,7 +177,10 @@ class Assistant:
 if __name__ == "__main__":
     assistant = Assistant()
     assistant.load_data()
-    print("Введіть команду:")
+    print("Greeting, welcome to 'Venomous Snakes' assistant, please choose from the following options:\n"
+          "1 - Assistant\n"
+          "2 - Notes\n"
+          "3 - Sort files")
     while True:
         command = input("> ")
         command_name, command_args = command.split(" ", 1) if " " in command else (command, "")
