@@ -109,11 +109,6 @@ class Assistant:
         self.address_book = AddressBook()
 
     @input_error
-    def hello(self, command_args):
-        return "Привіт! Я можу допомогти Вам з наступними командами: " \
-               "add, change name, phone name, show_all, birthday name, exit."
-
-    @input_error
     def add(self, command_args):
         name = input("Введіть ім'я: ")
         birthday = input("Введіть день народження (у форматі YYYY-MM-DD): ")
@@ -160,7 +155,7 @@ class Assistant:
     @input_error
     def exit(self, command_args):
         self.save_data()
-        return "До побачення!"
+        return "See you in Assistant!"
 
     def load_data(self):
         try:
@@ -177,17 +172,37 @@ class Assistant:
 if __name__ == "__main__":
     assistant = Assistant()
     assistant.load_data()
-    print("Greeting, welcome to 'Venomous Snakes' assistant, please choose from the following options:\n"
-          "1 - Assistant\n"
-          "2 - Notes\n"
-          "3 - Sort files")
     while True:
-        command = input("> ")
-        command_name, command_args = command.split(" ", 1) if " " in command else (command, "")
-        function = getattr(assistant, command_name, None)
-        if function:
-            print(function(command_args))
-        else:
-            print("Невідома команда. Спробуйте ще раз.")
-        if command_name == 'exit':
+        print("Greeting, welcome to 'Venomous Snakes' assistant, please choose from the following options:\n"
+              "1 - Assistant\n"
+              "2 - Notes\n"
+              "3 - Sort files\n"
+              "4 - Finish")
+        request = input("What are we doing today?:")
+        if request == "1":
+            print("Welcome to Assistant! I know such commands:\n"
+                  "Add - Adding new Person to Contacts\n"
+                  "Change {name}- Changing existing phone for contact \n"
+                  "Phone {name} - Showing phone for person\n"
+                  "Show All - Show all contacts in AddressBook\n"
+                  "Birthday {name} - How many days till Birthday \n"
+                  "Exit - Close Assistant \n")
+            while True:
+                command = input("> ")
+                command_name, command_args = command.split(" ", 1) if " " in command else (command, "")
+                function = getattr(assistant, command_name, None)
+                if function:
+                    print(function(command_args))
+                else:
+                    print("Unknown command - please try one more time.")
+                if command_name == 'exit':
+                    break
+        elif request == "2":
+            # Will be added logic for notes
+            pass
+        elif request == "3":
+            # Will be added logic for sorting
+            pass
+        elif request == "4":
+            print("Was pleasure to work with you!")
             break
