@@ -110,13 +110,13 @@ class Assistant:
 
     @input_error
     def add(self, command_args):
-        name = input("Введіть ім'я: ")
-        birthday = input("Введіть день народження (у форматі YYYY-MM-DD): ")
+        name = input("Write name: ")
+        birthday = input("Please enter birthday (Format: YYYY-MM-DD): ")
         record = Record(Name(name), Birthday(birthday))
-        phone = input("Введіть номер телефону: ")
+        phone = input("Enter phone number: ")
         record.add(Phone(phone))
         self.address_book.add_record(record)
-        return "Запис додано."
+        return "Contact was added."
 
     @input_error
     def change(self, command_args):
@@ -137,7 +137,7 @@ class Assistant:
         return ', '.join([str(phone.value) for phone in record.phones])
 
     @input_error
-    def show_all(self, command_args):
+    def show(self, command_args):
         return "\n".join([str(record.name.value) + ": " + ', '.join([str(phone.value) for phone in record.phones]) for record in self.address_book.get_all_records()])
 
     @input_error
@@ -184,13 +184,13 @@ if __name__ == "__main__":
                   "Add - Adding new Person to Contacts\n"
                   "Change {name}- Changing existing phone for contact \n"
                   "Phone {name} - Showing phone for person\n"
-                  "Show All - Show all contacts in AddressBook\n"
+                  "Show - Show all contacts in AddressBook\n"
                   "Birthday {name} - How many days till Birthday \n"
                   "Exit - Close Assistant \n")
             while True:
                 command = input("> ")
                 command_name, command_args = command.split(" ", 1) if " " in command else (command, "")
-                function = getattr(assistant, command_name, None)
+                function = getattr(assistant, command_name.lower(), None)
                 if function:
                     print(function(command_args))
                 else:
