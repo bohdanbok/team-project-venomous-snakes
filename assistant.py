@@ -308,15 +308,16 @@ if __name__ == "__main__":
         if request == "1":
             print("Welcome to Assistant! I know such commands:\n"
                   "Create - Create new Person to Contacts\n"
-                  "Add - Add extra info to Contact"
-                  "Change {name}- Changing existing phone for contact \n"
-                  "Phone {name} - Showing phone for person\n"
+                  "Add - Add extra info to Contact\n"
+                  "Change - Changing existing phone for contact \n"
+                  "Phone - Showing phone for person\n"
                   "Show - Show all contacts in AddressBook\n"
-                  "Birthday {name} - How many days till Birthday \n"
+                  "Birthday - How many days till Birthday \n"
                   "Save - Saving all info\n"
-                  "Delete - Deleting contact from Addressbook"
+                  "Delete - Deleting contact from Addressbook\n"
                   "Exit - Close Assistant \n")
             while True:
+                print("Commands: Create, Add, Change, Phone, Show, Birthday, Save, Delete, Exit")
                 command = input(">>> ")
                 function = getattr(assistant, command.lower().strip(), None)
                 if function:
