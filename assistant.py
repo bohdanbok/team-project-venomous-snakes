@@ -33,6 +33,10 @@ class Phone(Field):
             raise ValueError(f"Phone number {phone} is invalid.")
 
 
+class Address(Field):
+    pass
+
+
 class Birthday(Field):
     DATE_REGEX = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -72,14 +76,24 @@ class Email(Field):
 
 
 class Record:
-    def __init__(self, name, birthday=None, email=None):
+    def __init__(self, name, address=None, birthday=None, email=None):
         self.name = name
         self.phones = []
+        self.address = address
         self.birthday = birthday
         self.email = email
 
     def add(self, phone):
         self.phones.append(phone)
+
+    def set_birthday(self, birthday):
+        self.birthday = birthday
+
+    def set_email(self, email):
+        self.email = email
+
+    def set_address(self, address):
+        self.address = address
 
     def days_to_birthday(self):
         if self.birthday and self.birthday.value:
@@ -130,11 +144,19 @@ class Assistant:
     @input_error
     def add(self, command_args):
         name = input("Write name: ")
-        birthday = input("Please enter birthday (Format: YYYY-MM-DD): ")
-        email = input("Please enter email:")
-        record = Record(Name(name), Birthday(birthday), Email(email))
+        record = Record(Name(name))
         phone = input("Enter phone number: ")
-        record.add(Phone(phone))
+        if phone:
+            record.add(Phone(phone))
+        address = input("Enter address: ")
+        if address:
+            record.set_address(Address(address))
+        birthday = input("Please enter birthday (Format: YYYY-MM-DD): ")
+        if birthday:
+            record.set_birthday(Birthday(birthday))
+        email = input("Please enter email:")
+        if email:
+            record.set_email(Email(email))
         self.address_book.add_record(record)
         return "Contact was added."
 
@@ -158,9 +180,11 @@ class Assistant:
 
     @input_error
     def show(self, command_args):
-        return "\n".join([str(record.name.value) + ": " + ', '.join([str(phone.value) for phone in record.phones])
-                          + (f", Email: {record.email.value}" if record.email else "")
-                          + (f", Birthday: {record.birthday.value}" if record.email else "")
+        return "\n".join([str(record.name.value) + ": "
+                          + ', '.join([str(phone.value) for phone in record.phones])
+                          + (f", Address: {record.address.value}" if record.address else ", [No Address] ")
+                          + (f", Email: {record.email.value}" if record.email else ", [No Email] ")
+                          + (f", Birthday: {record.birthday.value}" if record.email else ", [No Birthday]")
                           for record in self.address_book.get_all_records()])
 
     @input_error
