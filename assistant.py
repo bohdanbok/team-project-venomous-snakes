@@ -258,6 +258,18 @@ class Assistant:
         else:
             return "There is no birthday day."
 
+    def whom(self):
+        days = int(input("Please enter for how many days you are looking for:"))
+        upcoming_birthday_contacts = [
+            record.name.value + f' Was born:{record.birthday.value}'
+            for record in self.address_book.get_all_records()
+            if record.days_to_birthday() in range(0, days)
+        ]
+        if upcoming_birthday_contacts:
+            return f"Contacts with upcoming birthday in {days} days:\n" + "\n".join(upcoming_birthday_contacts)
+        else:
+            return f"No contacts with upcoming birthday in {days} days."
+
     def search(self):
         query = input("Please enter what we are looking for:")
         for record in self.address_book.values():
@@ -313,11 +325,12 @@ if __name__ == "__main__":
                   "Phone - Showing phone for person\n"
                   "Show - Show all contacts in AddressBook\n"
                   "Birthday - How many days till Birthday \n"
+                  "Whom - Who is celebrating birthday in next days\n"
                   "Save - Saving all info\n"
                   "Delete - Deleting contact from Addressbook\n"
                   "Exit - Close Assistant \n")
             while True:
-                print("Commands: Create, Add, Change, Phone, Show, Birthday, Save, Delete, Exit")
+                print("Commands: Create, Add, Change, Phone, Show, Birthday, Whom, Save, Delete, Exit")
                 command = input(">>> ")
                 function = getattr(assistant, command.lower().strip(), None)
                 if function:
