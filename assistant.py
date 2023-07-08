@@ -32,6 +32,22 @@ class Phone(Field):
         if not self.PHONE_REGEX.match(phone):
             raise ValueError(f"Phone number {phone} is invalid.")
 
+    @property
+    def value(self):
+        if self._value:
+            return self._value
+        return None
+
+    @value.setter
+    def value(self, new_value):
+        while True:
+            try:
+                self.validate(new_value)
+                self._value = new_value
+                break
+            except ValueError:
+                new_value = input("Please enter phone number in proper format(380*********): ")
+
 
 class Address(Field):
     pass
@@ -43,6 +59,9 @@ class Birthday(Field):
     def validate(self, date_str):
         if not self.DATE_REGEX.match(date_str):
             raise ValueError(f"Invalid date format: {date_str}. Expected format: YYYY-MM-DD.")
+        year, month, day = map(int, date_str.split('-'))
+        if month > 12 or year > 2023 or day > 31:
+            raise ValueError(f"Invalid month: {month}. Month should be between 1 and 12.")
 
     @property
     def value(self):
@@ -52,8 +71,13 @@ class Birthday(Field):
 
     @value.setter
     def value(self, new_value):
-        self.validate(new_value)
-        self._value = new_value
+        while True:
+            try:
+                self.validate(new_value)
+                self._value = new_value
+                break
+            except ValueError:
+                new_value = input("Please enter the birthday in the format YYYY-MM-DD: ")
 
 
 class Email(Field):
@@ -71,8 +95,13 @@ class Email(Field):
 
     @value.setter
     def value(self, new_value):
-        self.validate(new_value)
-        self._value = new_value
+        while True:
+            try:
+                self.validate(new_value)
+                self._value = new_value
+                break
+            except ValueError:
+                new_value = input("Please enter a valid email: ")
 
 
 class Record:
@@ -183,9 +212,23 @@ class Assistant:
         record = self.address_book.data.get(name)
         if not record:
             return "No such contact with phone number."
-        phone = input("Enter new phone number: ")
-        record.phones = [Phone(phone)]
-        return "Result was saved."
+        extra = input("What we are willing to change?(Phone, Address, Birthday, Email):").lower()
+        if extra == 'phone':
+            phone = input('Please enter new phone:')
+            record.phones = [Phone(phone)]
+            return "Phone was changed"
+        if extra == 'address':
+            address = input('Please new Address:')
+            record.set_address(Address(address))
+            return "Address was changed"
+        if extra == 'birthday':
+            birthday = input('Please enter Birthday:')
+            record.set_birthday(Birthday(birthday))
+            return "Birthday was changed"
+        if extra == 'email':
+            email = input('Please enter Email:')
+            record.set_email(Email(email))
+            return "Email was changed"
 
     @input_error
     def phone(self):
@@ -195,7 +238,6 @@ class Assistant:
             return "No such contact with this phone number."
         return ', '.join([str(phone.value) for phone in record.phones])
 
-    @input_error
     def show(self):
         return "\n".join([str(record.name.value) + ": "
                           + ', '.join([str(phone.value) for phone in record.phones])
@@ -227,9 +269,17 @@ class Assistant:
                                   + (f", Birthday: {record.birthday.value}" if record.birthday else ", [No Birthday]")
                                   for record in self.address_book.get_all_records()])
 
+    def delete(self):
+        name = input("Please enter name of contact that you are willing to delete:")
+        record = self.address_book.data.get(name)
+        if not record:
+            return "No such contact with this name."
+        self.address_book.remove_record(name)
+        return "Contact was deleted"
+
     @input_error
     def exit(self):
-        self.save_data()
+        self.save()
         return "See you in Assistant!"
 
     def load_data(self):
@@ -239,9 +289,10 @@ class Assistant:
         except FileNotFoundError:
             pass
 
-    def save_data(self):
+    def save(self):
         with open(self.SAVE_FILE, "wb") as file:
             pickle.dump(self.address_book, file)
+        return "Was saved!"
 
 
 if __name__ == "__main__":
@@ -253,7 +304,7 @@ if __name__ == "__main__":
               "2 - Notes\n"
               "3 - Sort files\n"
               "4 - Finish")
-        request = input("What are we doing today?:")
+        request = input("What are we doing today?:").lower().strip()
         if request == "1":
             print("Welcome to Assistant! I know such commands:\n"
                   "Create - Create new Person to Contacts\n"
@@ -262,10 +313,12 @@ if __name__ == "__main__":
                   "Phone {name} - Showing phone for person\n"
                   "Show - Show all contacts in AddressBook\n"
                   "Birthday {name} - How many days till Birthday \n"
+                  "Save - Saving all info\n"
+                  "Delete - Deleting contact from Addressbook"
                   "Exit - Close Assistant \n")
             while True:
                 command = input(">>> ")
-                function = getattr(assistant, command.lower(), None)
+                function = getattr(assistant, command.lower().strip(), None)
                 if function:
                     print(function())
                 else:
