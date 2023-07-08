@@ -308,7 +308,7 @@ class Assistant:
         return "Was saved!"
 
 
-if __name__ == "__main__":
+def run_assistant():
     assistant = Assistant()
     assistant.load_data()
     while True:
@@ -352,3 +352,7 @@ if __name__ == "__main__":
         elif request == "5":
             print("Was pleasure to work with you!")
             break
+
+
+if __name__ == "__main__":
+    run_assistant()
