@@ -316,7 +316,7 @@ def run_assistant():
               "1 - Assistant\n"
               "2 - Notes\n"
               "3 - Sort files\n"
-              "4 - What is the weather\n"
+              "4 - What is the weather?\n"
               "5 - Finish")
         request = input("What are we doing today?:").lower().strip()
         if request == "1":
