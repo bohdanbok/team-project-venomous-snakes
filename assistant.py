@@ -116,13 +116,6 @@ class AddressBook(UserDict):
     def get_all_records(self):
         return self.data.values()
 
-    def search(self, query):
-        result = []
-        for record in self.data.values():
-            if query.lower() in record.name.value.lower() or any(query in phone.value for phone in record.phones):
-                result.append(record)
-        return result
-
 
 def input_error(func):
     def inner(*args):
@@ -142,7 +135,7 @@ class Assistant:
         self.address_book = AddressBook()
 
     @input_error
-    def add(self, command_args):
+    def create(self):
         name = input("Write name: ")
         record = Record(Name(name))
         phone = input("Enter phone number: ")
@@ -161,8 +154,32 @@ class Assistant:
         return "Contact was added."
 
     @input_error
-    def change(self, command_args):
-        name = command_args.strip()
+    def add(self):
+        name = input("Please enter name of person to which you are willing to add info:")
+        record = self.address_book.data.get(name)
+        if not record:
+            return "No such contact - please check your input."
+        extra = input("What we are willing to add?(Phone, Address, Birthday, Email):").lower()
+        if extra == 'phone':
+            phone = input('Please enter extra phone:')
+            record.add(Phone(phone))
+            return "Phone was added"
+        if extra == 'address':
+            address = input('Please enter Address:')
+            record.set_address(Address(address))
+            return "Address was added"
+        if extra == 'birthday':
+            birthday = input('Please enter Birthday:')
+            record.set_birthday(Birthday(birthday))
+            return "Birthday was added"
+        if extra == 'email':
+            email = input('Please enter Email:')
+            record.set_email(Email(email))
+            return "Email was added"
+
+    @input_error
+    def change(self):
+        name = input("Please enter name of person:")
         record = self.address_book.data.get(name)
         if not record:
             return "No such contact with phone number."
@@ -171,25 +188,25 @@ class Assistant:
         return "Result was saved."
 
     @input_error
-    def phone(self, command_args):
-        name = command_args.strip()
+    def phone(self):
+        name = input("Please enter name of person:")
         record = self.address_book.data.get(name)
         if not record:
             return "No such contact with this phone number."
         return ', '.join([str(phone.value) for phone in record.phones])
 
     @input_error
-    def show(self, command_args):
+    def show(self):
         return "\n".join([str(record.name.value) + ": "
                           + ', '.join([str(phone.value) for phone in record.phones])
                           + (f", Address: {record.address.value}" if record.address else ", [No Address] ")
                           + (f", Email: {record.email.value}" if record.email else ", [No Email] ")
-                          + (f", Birthday: {record.birthday.value}" if record.email else ", [No Birthday]")
+                          + (f", Birthday: {record.birthday.value}" if record.birthday else ", [No Birthday]")
                           for record in self.address_book.get_all_records()])
 
     @input_error
-    def birthday(self, command_args):
-        name = command_args.strip()
+    def birthday(self):
+        name = input("Please enter name of person:")
         record = self.address_book.data.get(name)
         if not record:
             return "No such contact with this name."
@@ -199,8 +216,20 @@ class Assistant:
         else:
             return "There is no birthday day."
 
+    def search(self):
+        query = input("Please enter what we are looking for:")
+        for record in self.address_book.values():
+            if query.lower() in record.name.value.lower() or any(query in phone.value for phone in record.phones):
+                return "\n".join([str(record.name.value) + ": "
+                          + ', '.join([str(phone.value) for phone in record.phones])
+                          + (f", Address: {record.address.value}" if record.address else ", [No Address] ")
+                          + (f", Email: {record.email.value}" if record.email else ", [No Email] ")
+                          + (f", Birthday: {record.birthday.value}" if record.birthday else ", [No Birthday]")
+                                    for record in self.address_book.get_all_records()])
+
+
     @input_error
-    def exit(self, command_args):
+    def exit(self):
         self.save_data()
         return "See you in Assistant!"
 
@@ -228,7 +257,8 @@ if __name__ == "__main__":
         request = input("What are we doing today?:")
         if request == "1":
             print("Welcome to Assistant! I know such commands:\n"
-                  "Add - Adding new Person to Contacts\n"
+                  "Create - Create new Person to Contacts\n"
+                  "Add - Add extra info to Contact"
                   "Change {name}- Changing existing phone for contact \n"
                   "Phone {name} - Showing phone for person\n"
                   "Show - Show all contacts in AddressBook\n"
@@ -236,13 +266,12 @@ if __name__ == "__main__":
                   "Exit - Close Assistant \n")
             while True:
                 command = input(">>> ")
-                command_name, command_args = command.split(" ", 1) if " " in command else (command, "")
-                function = getattr(assistant, command_name.lower(), None)
+                function = getattr(assistant, command.lower(), None)
                 if function:
-                    print(function(command_args))
+                    print(function())
                 else:
                     print("Unknown command - please try one more time.")
-                if command_name == 'exit':
+                if command == 'exit':
                     break
         elif request == "2":
             # Will be added logic for notes
