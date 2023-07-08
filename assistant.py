@@ -221,12 +221,11 @@ class Assistant:
         for record in self.address_book.values():
             if query.lower() in record.name.value.lower() or any(query in phone.value for phone in record.phones):
                 return "\n".join([str(record.name.value) + ": "
-                          + ', '.join([str(phone.value) for phone in record.phones])
-                          + (f", Address: {record.address.value}" if record.address else ", [No Address] ")
-                          + (f", Email: {record.email.value}" if record.email else ", [No Email] ")
-                          + (f", Birthday: {record.birthday.value}" if record.birthday else ", [No Birthday]")
-                                    for record in self.address_book.get_all_records()])
-
+                                  + ', '.join([str(phone.value) for phone in record.phones])
+                                  + (f", Address: {record.address.value}" if record.address else ", [No Address] ")
+                                  + (f", Email: {record.email.value}" if record.email else ", [No Email] ")
+                                  + (f", Birthday: {record.birthday.value}" if record.birthday else ", [No Birthday]")
+                                  for record in self.address_book.get_all_records()])
 
     @input_error
     def exit(self):
