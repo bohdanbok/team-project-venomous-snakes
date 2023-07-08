@@ -5,8 +5,7 @@ from collections import UserDict
 
 
 class Field:
-    def __init__(self, value):
-        self._value = None
+    def __init__(self, value=None):
         self.value = value
 
     @property
@@ -53,11 +52,31 @@ class Birthday(Field):
         self._value = new_value
 
 
+class Email(Field):
+    EMAIL_REGEX = re.compile(r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+")
+
+    def validate(self, email_str):
+        if not self.EMAIL_REGEX.match(email_str):
+            raise ValueError(f"Invalid email")
+
+    @property
+    def value(self):
+        if self._value:
+            return self._value
+        return None
+
+    @value.setter
+    def value(self, new_value):
+        self.validate(new_value)
+        self._value = new_value
+
+
 class Record:
-    def __init__(self, name, birthday=None):
+    def __init__(self, name, birthday=None, email=None):
         self.name = name
         self.phones = []
         self.birthday = birthday
+        self.email = email
 
     def add(self, phone):
         self.phones.append(phone)
@@ -96,9 +115,9 @@ def input_error(func):
         try:
             return func(*args)
         except (IndexError, ValueError):
-            return "Помилка введення. Спробуйте ще раз."
+            return "Input Error.Please try one more time."
         except KeyError:
-            return "Контакту з таким ім'ям не знайдено."
+            return "No such contact, please try one more time."
     return inner
 
 
@@ -112,7 +131,8 @@ class Assistant:
     def add(self, command_args):
         name = input("Write name: ")
         birthday = input("Please enter birthday (Format: YYYY-MM-DD): ")
-        record = Record(Name(name), Birthday(birthday))
+        email = input("Please enter email:")
+        record = Record(Name(name), Birthday(birthday), Email(email))
         phone = input("Enter phone number: ")
         record.add(Phone(phone))
         self.address_book.add_record(record)
@@ -123,34 +143,37 @@ class Assistant:
         name = command_args.strip()
         record = self.address_book.data.get(name)
         if not record:
-            return "Контакту з таким ім'ям не знайдено."
-        phone = input("Введіть новий номер телефону: ")
+            return "No such contact with phone number."
+        phone = input("Enter new phone number: ")
         record.phones = [Phone(phone)]
-        return "Зміни збережено."
+        return "Result was saved."
 
     @input_error
     def phone(self, command_args):
         name = command_args.strip()
         record = self.address_book.data.get(name)
         if not record:
-            return "Контакту з таким ім'ям не знайдено."
+            return "No such contact with this phone number."
         return ', '.join([str(phone.value) for phone in record.phones])
 
     @input_error
     def show(self, command_args):
-        return "\n".join([str(record.name.value) + ": " + ', '.join([str(phone.value) for phone in record.phones]) for record in self.address_book.get_all_records()])
+        return "\n".join([str(record.name.value) + ": " + ', '.join([str(phone.value) for phone in record.phones])
+                          + (f", Email: {record.email.value}" if record.email else "")
+                          + (f", Birthday: {record.birthday.value}" if record.email else "")
+                          for record in self.address_book.get_all_records()])
 
     @input_error
     def birthday(self, command_args):
         name = command_args.strip()
         record = self.address_book.data.get(name)
         if not record:
-            return "Контакту з таким ім'ям не знайдено."
+            return "No such contact with this name."
         days = record.days_to_birthday()
         if days:
-            return f"До дня народження залишилося {days} днів."
+            return f"{days} left till birthday."
         else:
-            return "Дата народження не вказана."
+            return "There is no birthday day."
 
     @input_error
     def exit(self, command_args):
@@ -188,7 +211,7 @@ if __name__ == "__main__":
                   "Birthday {name} - How many days till Birthday \n"
                   "Exit - Close Assistant \n")
             while True:
-                command = input("> ")
+                command = input(">>> ")
                 command_name, command_args = command.split(" ", 1) if " " in command else (command, "")
                 function = getattr(assistant, command_name.lower(), None)
                 if function:
