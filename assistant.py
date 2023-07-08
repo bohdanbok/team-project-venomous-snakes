@@ -2,6 +2,7 @@ import re
 import pickle
 from datetime import date, datetime
 from collections import UserDict
+import weather
 
 
 class Field:
@@ -315,7 +316,8 @@ if __name__ == "__main__":
               "1 - Assistant\n"
               "2 - Notes\n"
               "3 - Sort files\n"
-              "4 - Finish")
+              "4 - What is the weather\n"
+              "5 - Finish")
         request = input("What are we doing today?:").lower().strip()
         if request == "1":
             print("Welcome to Assistant! I know such commands:\n"
@@ -346,5 +348,7 @@ if __name__ == "__main__":
             # Will be added logic for sorting
             pass
         elif request == "4":
+            weather.what_weather()
+        elif request == "5":
             print("Was pleasure to work with you!")
             break
