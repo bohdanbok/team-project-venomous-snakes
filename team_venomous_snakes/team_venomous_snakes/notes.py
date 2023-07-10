@@ -8,16 +8,18 @@ class Notes:
         self.notes = []
 
     def create(self):
+        note_name = input("Please write note name: ")
         note_text = input("Please write your note here: ")
-        self.notes.append({"Note": [note_text, []]})
+        self.notes.append({f"{note_name}": [note_text, []]})
         return "Note was created!"
 
     def search(self):
         keyword = input("Please write your key word here: ")
         matching_notes = []
         for note in self.notes:
-            if keyword in note["Note"][0] or keyword in note["Note"][1]:
-                matching_notes.append(note)
+            for name, value in note.items():
+                if keyword in name or keyword in value[0] or keyword in value[1]:
+                    matching_notes.append(note)
         return matching_notes
 
     def edit(self):
@@ -25,7 +27,8 @@ class Notes:
         if note_index < len(self.notes):
             print(self.notes[note_index])
             new_text = input("Please write new text for this note: ")
-            self.notes[note_index]["Note"][0] = new_text
+            for key, value in self.notes[note_index].items():
+                self.notes[note_index][f"{key}"][0] = new_text
             return "Note was edited"
         else:
             return "No note with such number"
@@ -44,7 +47,8 @@ class Notes:
         note_index = int(input("Please write number, which note you are willing to tag:")) - 1
         tags = input("Please write Tag:")
         if note_index < len(self.notes):
-            self.notes[note_index]["Note"][1].append(tags)
+            for key, value in self.notes[note_index].items():
+                self.notes[note_index][f"{key}"][1].append(tags)
             return "Tag was added!"
         return "No note with such index"
 
