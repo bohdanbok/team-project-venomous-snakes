@@ -21,8 +21,8 @@ def what_weather():
         wind_report = data['wind']
 
         print(f"{city:-^35}")
-        print(f"Temperature: {temperature}")
-        print(f"Feel Like: {temp_feel_like}")
+        print("Temperature:", temperature, "\u00B0C")
+        print("Feel Like:", temp_feel_like, "\u00B0C")
         print(f"Humidity: {humidity} %")
         print(f"Weather Report: {weather_report[0]['description']}")
     else:
