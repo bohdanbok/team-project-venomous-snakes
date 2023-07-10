@@ -34,7 +34,10 @@ class Notes:
             return "No note with such number"
 
     def show(self):
-        return self.notes
+        for note in self.notes:
+            for key, value in note.items():
+                print(key, ":", value)
+        return "This is all your notes"
 
     def delete(self):
         note_index = int(input("Please write number, which note you are willing to delete:")) - 1
