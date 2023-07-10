@@ -1,35 +1,94 @@
-class Assistant:
+import pickle
+
+
+class Notes:
+    SAVE_FILE = "notes.pickle"
+
     def __init__(self):
         self.notes = []
 
-    def add_note(self, note_text): #зберігає нотатки з текстовою інфою
-        self.notes.append({"text": note_text})
+    def create(self):
+        note_text = input("Please write your note here: ")
+        self.notes.append({"Note": [note_text, []]})
+        return "Note was created!"
 
-    def search_notes(self, keyword): #проводить пошук за нотатками
+    def search(self):
+        keyword = input("Please write your key word here: ")
         matching_notes = []
         for note in self.notes:
-            if keyword in note["text"] or keyword in note["tags"] or keyword in note["keywords"]:
+            if keyword in note["Note"][0] or keyword in note["Note"][1]:
                 matching_notes.append(note)
         return matching_notes
 
-    def edit_note_text(self, note_index, new_text): #редагує нотатки
+    def edit(self):
+        note_index = int(input("Please write what note you are willing to edit:")) - 1
         if note_index < len(self.notes):
-            self.notes[note_index]["text"] = new_text
-            return True
-        return False
+            print(self.notes[note_index])
+            new_text = input("Please write new text for this note: ")
+            self.notes[note_index]["Note"][0] = new_text
+            return "Note was edited"
+        else:
+            return "No note with such number"
 
-    def delete_note(self, note_index): #видаляє нотатки
+    def show(self):
+        return self.notes
+
+    def delete(self):
+        note_index = int(input("Please write number, which note you are willing to delete:")) - 1
         if note_index < len(self.notes):
             del self.notes[note_index]
-            return True
-        return False
+            return "Note was deleted"
+        return "No note with such index"
 
-    #додає в нотатки "теги" ключові слова, що описують тему та предмет запису
-    def add_tags_to_note(self, note_index, tags):
+    def tag(self):
+        note_index = int(input("Please write number, which note you are willing to tag:")) - 1
+        tags = input("Please write Tag:")
         if note_index < len(self.notes):
-            self.notes[note_index]["tags"].extend(tags)
-            return True
-        return False
+            self.notes[note_index]["Note"][1].append(tags)
+            return "Tag was added!"
+        return "No note with such index"
+
+    def exit(self):
+        self.save()
+        return "See you in Note Assistant!"
+
+    def load_data(self):
+        try:
+            with open(self.SAVE_FILE, "rb") as file:
+                self.notes = pickle.load(file)
+        except FileNotFoundError:
+            pass
+
+    def save(self):
+        with open(self.SAVE_FILE, "wb") as file:
+            pickle.dump(self.notes, file)
+        return "Was saved!"
+
+
+def run_notes():
+    notes = Notes()
+    notes.load_data()
+    print("Welcome to notes assistant! I know such commands:\n"
+          "Create - Creating new note\n"
+          "Search - Searching info in note\n"
+          "Edit - Edit existing note\n"
+          "Show - Showing what notes was created\n"
+          "Delete - Deleting note\n"
+          "Tag - Adding tag to note\n"
+          "Save - Saving information\n"
+          'Exit - Close note assistant')
+    while True:
+        print("Commands: Create, Search, Edit, Delete, Tag, Save, Exit")
+        command = input(">>> ")
+        function = getattr(notes, command.lower().strip(), None)
+        if function:
+            print(function())
+        else:
+            print("Unknown command - please try one more time.")
+        if command == 'exit':
+            print("See you!")
+            break
+
 
 if __name__ == "__main__":
-    assistant = Assistant()
+    run_notes()

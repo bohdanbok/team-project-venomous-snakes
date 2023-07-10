@@ -3,6 +3,7 @@ import pickle
 from datetime import date, datetime
 from collections import UserDict
 import weather
+import notes
 
 
 class Field:
@@ -342,8 +343,7 @@ def run_assistant():
                 if command == 'exit':
                     break
         elif request == "2":
-            # Will be added logic for notes
-            pass
+            notes.run_notes()
         elif request == "3":
             # Will be added logic for sorting
             pass
