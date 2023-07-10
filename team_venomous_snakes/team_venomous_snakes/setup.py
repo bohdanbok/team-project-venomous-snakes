@@ -1,14 +1,14 @@
 from setuptools import setup
 
 setup(
-    name='address-book-assistant',
+    name='snakes-bot',
     version='1.0',
-    description='An address book assistant script',
-    author='Your Name',
-    author_email='yourname@example.com',
-    url='https://github.com/yourusername/address-book-assistant',
-    packages=['notes', 'weather'],
-    py_modules=['assistant'],
+    description='Bot from Venomous Snakes Team',
+    author='Bohdan Bokariev, Egor , Viktoria ',
+    author_email='b.bokariev@gmail.com',
+    url='https://github.com/bohdanbok/team-project-venomous-snakes',
+    packages=['assistant', 'notes', 'weather'],
+    py_modules=['assistant', 'notes', 'weather'],
     install_requires=[
         'python-dateutil',
     ],
@@ -17,7 +17,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.11',
     ],
     entry_points={
         'console_scripts': [
