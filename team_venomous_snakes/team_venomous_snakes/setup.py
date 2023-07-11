@@ -7,8 +7,8 @@ setup(
     author='Bohdan Bokariev, Egor Pogrebnoy, Viktoria Piatkovska',
     author_email='b.bokariev@gmail.com, y4ixxxamadara@gmail.com, vikki.mrrr@gmail.com',
     url='https://github.com/bohdanbok/team-project-venomous-snakes',
-    packages=['assistant', 'notes', 'weather', 'sort'],
-    py_modules=['assistant', 'notes', 'weather', 'sort'],
+    packages=['main', 'assistant', 'notes', 'weather', 'sort'],
+    py_modules=['main', 'assistant', 'notes', 'weather', 'sort'],
     install_requires=[
         'python-dateutil',
     ],
