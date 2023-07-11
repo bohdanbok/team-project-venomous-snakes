@@ -85,7 +85,7 @@ def run_notes():
           "Save - Saving information\n"
           'Exit - Close note assistant')
     while True:
-        print("Commands: Create, Search, Edit, Delete, Tag, Save, Exit")
+        print("Commands: Create, Search, Edit, Show, Delete, Tag, Save, Exit")
         command = input(">>> ")
         function = getattr(notes, command.lower().strip(), None)
         if function:

@@ -4,11 +4,11 @@ setup(
     name='snakes-bot',
     version='1.0',
     description='Bot from Venomous Snakes Team',
-    author='Bohdan Bokariev, Egor Pogrebnoy, Viktoria ',
+    author='Bohdan Bokariev, Egor Pogrebnoy, Viktoria Piatkovska',
     author_email='b.bokariev@gmail.com, y4ixxxamadara@gmail.com, vikki.mrrr@gmail.com',
     url='https://github.com/bohdanbok/team-project-venomous-snakes',
-    packages=['assistant', 'notes', 'weather'],
-    py_modules=['assistant', 'notes', 'weather'],
+    packages=['assistant', 'notes', 'weather', 'sort'],
+    py_modules=['assistant', 'notes', 'weather', 'sort'],
     install_requires=[
         'python-dateutil',
     ],
@@ -21,7 +21,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'run_bot = assistant.assistant:run_assistant',
+            'run_bot = main.main:run_me',
         ],
     },
 )

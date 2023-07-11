@@ -2,8 +2,6 @@ import re
 import pickle
 from datetime import date, datetime
 from collections import UserDict
-import weather
-import notes
 
 
 class Field:
@@ -312,45 +310,26 @@ class Assistant:
 def run_assistant():
     assistant = Assistant()
     assistant.load_data()
+    print("Welcome to Assistant! I know such commands:\n"
+          "Create - Create new Person to Contacts\n"
+          "Add - Add extra info to Contact\n"
+          "Change - Changing existing phone for contact \n"
+          "Phone - Showing phone for person\n"
+          "Show - Show all contacts in AddressBook\n"
+          "Birthday - How many days till Birthday \n"
+          "Whom - Who is celebrating birthday in next days\n"
+          "Save - Saving all info\n"
+          "Delete - Deleting contact from Addressbook\n"
+          "Exit - Close Assistant \n")
     while True:
-        print("Greeting, welcome to 'Venomous Snakes' assistant, please choose from the following options:\n"
-              "1 - Assistant\n"
-              "2 - Notes\n"
-              "3 - Sort files\n"
-              "4 - What is the weather?\n"
-              "5 - Finish")
-        request = input("What are we doing today?:").lower().strip()
-        if request == "1":
-            print("Welcome to Assistant! I know such commands:\n"
-                  "Create - Create new Person to Contacts\n"
-                  "Add - Add extra info to Contact\n"
-                  "Change - Changing existing phone for contact \n"
-                  "Phone - Showing phone for person\n"
-                  "Show - Show all contacts in AddressBook\n"
-                  "Birthday - How many days till Birthday \n"
-                  "Whom - Who is celebrating birthday in next days\n"
-                  "Save - Saving all info\n"
-                  "Delete - Deleting contact from Addressbook\n"
-                  "Exit - Close Assistant \n")
-            while True:
-                print("Commands: Create, Add, Change, Phone, Show, Birthday, Whom, Save, Delete, Exit")
-                command = input(">>> ")
-                function = getattr(assistant, command.lower().strip(), None)
-                if function:
-                    print(function())
-                else:
-                    print("Unknown command - please try one more time.")
-                if command == 'exit':
-                    break
-        elif request == "2":
-            notes.run_notes()
-        elif request == "3":
-            # Will be added logic for sorting
-            pass
-        elif request == "4":
-            weather.what_weather()
-        elif request == "5":
-            print("Was pleasure to work with you!")
+        print("Commands: Create, Add, Change, Phone, Show, Birthday, Whom, Save, Delete, Exit")
+        command = input(">>> ")
+        function = getattr(assistant, command.lower().strip(), None)
+        if function:
+            print(function())
+        else:
+            print("Unknown command - please try one more time.")
+        if command == 'exit':
             break
 
 
