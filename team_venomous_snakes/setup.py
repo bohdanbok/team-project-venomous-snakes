@@ -1,14 +1,14 @@
 from setuptools import setup
 
 setup(
-    name='snakes-bot',
+    name='snakes',
     version='1.0',
     description='Bot from Venomous Snakes Team',
     author='Bohdan Bokariev, Egor Pogrebnoy, Viktoria Piatkovska',
     author_email='b.bokariev@gmail.com, y4ixxxamadara@gmail.com, vikki.mrrr@gmail.com',
     url='https://github.com/bohdanbok/team-project-venomous-snakes',
-    packages=['main', 'assistant', 'notes', 'weather', 'sort'],
-    py_modules=['main', 'assistant', 'notes', 'weather', 'sort'],
+    packages=['team_venomous_snakes'],
+    py_modules=['team_venomous_snakes'],
     install_requires=[
         'python-dateutil',
     ],
@@ -21,7 +21,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'run_bot = main.main:run_me',
+            'snake=team_venomous_snakes.main:run',
         ],
     },
 )
